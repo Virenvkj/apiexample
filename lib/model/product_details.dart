@@ -1,15 +1,4 @@
-// To parse this JSON data, do
-//
-//     final productDetails = productDetailsFromJson(jsonString);
-
-import 'dart:convert';
-
 import 'package:apiexample/model/rating_details.dart';
-
-ProductDetails productDetailsFromJson(String str) =>
-    ProductDetails.fromJson(json.decode(str));
-
-String productDetailsToJson(ProductDetails data) => json.encode(data.toJson());
 
 class ProductDetails {
   final int id;

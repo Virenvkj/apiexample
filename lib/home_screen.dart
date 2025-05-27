@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:apiexample/model/product_details.dart';
 import 'package:apiexample/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> fetchProduct() async {
     final response =
         await http.get(Uri.parse('https://fakestoreapi.com//products/2'));
-    productDetails = productDetailsFromJson(response.body);
+    productDetails = ProductDetails.fromJson(jsonDecode(response.body));
 
     setState(() {});
   }
