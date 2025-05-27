@@ -13,14 +13,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int counter = 10;
-  String imageUrl = '';
+  int? id;
+  String? title;
+  String? description;
+  String? category;
+  String? image;
+  double? price;
+  double? rate;
+  int? count;
 
-  Future<void> fetchImage() async {
-    final http.Response response =
-        await http.get(Uri.parse('https://dog.ceo/api/breeds/image/random'));
+  Future<void> fetchProduct() async {
+    final response =
+        await http.get(Uri.parse('https://fakestoreapi.com//products/2'));
     final body = jsonDecode(response.body);
-    imageUrl = body['message'];
+    id = body['id'];
+    title = body['title'];
+    description = body['description'];
+    category = body['category'];
+    image = body['image'];
+    price = body['price'];
+    rate = body['rating']['rate'];
+    count = body['rating']['count'];
     setState(() {});
   }
 
@@ -35,23 +48,25 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              imageUrl.isNotEmpty
-                  ? "Here is your image"
-                  : "Press the button to fetch an image",
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            if (imageUrl.isNotEmpty) Image.network(imageUrl),
+            Text('ID : $id'),
+            Text('Title : $title'),
+            Text('Description : $description'),
+            Text('Category : $category'),
+            if (image != null)
+              Image.network(
+                image!,
+                height: 100,
+                width: 100,
+              ),
+            Text('Price : $price'),
+            Text('Rate : $rate'),
+            Text('Count : $count'),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await fetchImage();
-        },
-        tooltip: 'Increment',
+        onPressed: () => fetchProduct(),
+        tooltip: 'Fetch Products',
         child: const Icon(Icons.add),
       ),
     );
