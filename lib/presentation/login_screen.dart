@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:apiexample/core/api_requests.dart';
 import 'package:apiexample/model/login_model.dart';
+import 'package:apiexample/presentation/dashboard_screen.dart';
+import 'package:apiexample/utility/shared_prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -17,11 +18,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isLoading = false;
 
   Future<void> _login({
     required String username,
     required String password,
   }) async {
+    FocusScope.of(context).unfocus();
+
+    setState(() {
+      isLoading = true;
+    });
+
     final loginModel = LoginModel(
       username: username,
       password: password,
@@ -36,7 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
       final userToken = jsonDecode(response.body)['token'];
       Map<String, dynamic> decodedToken = JwtDecoder.decode(userToken);
       final userId = decodedToken['sub'];
-      log("userId: $userId");
+      await SharedPrefs.setIntValue(key: SharedPrefs.userIdKey, value: userId);
+
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -48,7 +59,15 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.green,
         ),
       );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const DashboardScreen(),
+        ),
+        (val) => false,
+      );
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -61,6 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -77,12 +99,14 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextField(
+                  enabled: !isLoading,
                   controller: usernameController,
                   decoration: const InputDecoration(
                     labelText: 'Username',
                   ),
                 ),
                 TextField(
+                  enabled: !isLoading,
                   obscuringCharacter: '*',
                   obscureText: true,
                   controller: passwordController,
@@ -111,7 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     }
                   },
-                  child: const Text('Login'),
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text('Login'),
                 ),
               ],
             ),
