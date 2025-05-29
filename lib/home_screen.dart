@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:apiexample/core/api_requests.dart';
 import 'package:apiexample/model/product_details.dart';
 import 'package:apiexample/widgets/product_card.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +14,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  ProductDetails? productDetails;
+  List<ProductDetails> allProducts = [];
 
   Future<void> fetchProduct() async {
-    final response =
-        await http.get(Uri.parse('https://fakestoreapi.com//products/2'));
-    productDetails = ProductDetails.fromJson(jsonDecode(response.body));
+    final response = await http.get(Uri.parse(ApiRequests.allProducts));
+    allProducts = productDetailsFromJson(response.body);
 
     setState(() {});
   }
@@ -33,12 +31,17 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (productDetails != null)
-              ProductCard(productDetails: productDetails),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: allProducts
+                .map(
+                  (product) => ProductCard(
+                    productDetails: product,
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

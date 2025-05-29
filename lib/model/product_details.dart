@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:apiexample/model/rating_details.dart';
 
 class ProductDetails {
@@ -39,3 +41,7 @@ class ProductDetails {
         "rating": rating.toJson(),
       };
 }
+
+List<ProductDetails> productDetailsFromJson(String str) =>
+    List<ProductDetails>.from(
+        json.decode(str).map((x) => ProductDetails.fromJson(x)));

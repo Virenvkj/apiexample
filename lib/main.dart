@@ -1,4 +1,4 @@
-import 'package:apiexample/presentation/login_screen.dart';
+import 'package:apiexample/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +17,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
+      home: const MyHomePage(
+        title: "All prducts",
+      ),
     );
   }
 }
