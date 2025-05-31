@@ -42,6 +42,24 @@ class ProductDetails {
       };
 }
 
+// List<ProductDetails> productDetailsFromJson(String str) =>
+//     List<ProductDetails>.from(
+//       json.decode(str).map(
+//             (x) => ProductDetails.fromJson(x),
+//           ),
+//     );
+
+// List<ProductDetails> productDetailsFromJson(
+//         List<dynamic> productListMap) =>
+//     productListMap.map((e) => ProductDetails.fromJson(e)).toList();
+
+// List<ProductDetails> productDetailsFromJson(
+//         String str) =>
+//     jsonDecode(str).map((e) => ProductDetails.fromJson(e)).toList();
+
 List<ProductDetails> productDetailsFromJson(String str) =>
     List<ProductDetails>.from(
-        json.decode(str).map((x) => ProductDetails.fromJson(x)));
+      jsonDecode(str).map(
+        (x) => ProductDetails.fromJson(x),
+      ),
+    );

@@ -1,7 +1,11 @@
-import 'package:apiexample/home_screen.dart';
+import 'package:apiexample/presentation/dashboard_screen.dart';
+import 'package:apiexample/presentation/login_screen.dart';
+import 'package:apiexample/utility/shared_prefs.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPrefs().init();
   runApp(const MyApp());
 }
 
@@ -10,6 +14,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isUserLoggedIn =
+        SharedPrefs.getIntValue(key: SharedPrefs.userIdKey) != null;
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -17,9 +24,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(
-        title: "All prducts",
-      ),
+      home: isUserLoggedIn ? const DashboardScreen() : const LoginScreen(),
     );
   }
 }
