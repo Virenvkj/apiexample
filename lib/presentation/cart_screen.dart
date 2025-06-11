@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:apiexample/core/api_requests.dart';
 import 'package:apiexample/core/auth_service.dart';
 import 'package:apiexample/model/cart_model.dart';
-import 'package:apiexample/utility/shared_prefs.dart';
+import 'package:apiexample/utils/shared_prefs.dart';
 import 'package:apiexample/widgets/basket_product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

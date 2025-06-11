@@ -1,5 +1,5 @@
 import 'package:apiexample/presentation/login_screen.dart';
-import 'package:apiexample/utility/shared_prefs.dart';
+import 'package:apiexample/utils/shared_prefs.dart';
 import 'package:flutter/material.dart';
 
 class AuthService {

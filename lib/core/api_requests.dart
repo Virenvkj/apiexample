@@ -5,4 +5,5 @@ class ApiRequests {
   static const String login = '${baseUrl}auth/login';
   static const String allProducts = '${baseUrl}products';
   static const String getCartItems = '${baseUrl}carts';
+  static const String getUserProfile = '${baseUrl}users';
 }

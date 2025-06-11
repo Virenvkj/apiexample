@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:apiexample/core/api_requests.dart';
 import 'package:apiexample/model/login_model.dart';
 import 'package:apiexample/presentation/dashboard_screen.dart';
-import 'package:apiexample/utility/shared_prefs.dart';
+import 'package:apiexample/utils/custom_snackbar.dart';
+import 'package:apiexample/utils/shared_prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -48,17 +49,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Login successful",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Colors.green,
-        ),
+      CustomSnackbar.successSnackBar(
+        context: context,
+        message: "Login successful",
       );
+
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -68,16 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } else {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Login failed: ${response.reasonPhrase}",
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackbar.failureSnackBar(
+        context: context,
+        message: "Login failed: ${response.reasonPhrase}",
       );
     }
     setState(() {
