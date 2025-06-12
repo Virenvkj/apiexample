@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:apiexample/core/api_requests.dart';
+import 'package:apiexample/core/api_service.dart';
 import 'package:apiexample/model/login_model.dart';
 import 'package:apiexample/presentation/dashboard_screen.dart';
 import 'package:apiexample/utils/custom_snackbar.dart';
 import 'package:apiexample/utils/shared_prefs.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -36,38 +34,31 @@ class _LoginScreenState extends State<LoginScreen> {
       password: password,
     );
 
-    final response = await http.post(
-      Uri.parse(ApiRequests.login),
+    final response = await ApiService.post(
+      url: ApiRequests.login,
       body: loginModel.toJson(),
     );
 
-    if (response.statusCode == 200) {
-      final userToken = jsonDecode(response.body)['token'];
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(userToken);
-      final userId = decodedToken['sub'];
-      await SharedPrefs.setIntValue(key: SharedPrefs.userIdKey, value: userId);
+    final userToken = response['token'];
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(userToken);
+    final userId = decodedToken['sub'];
+    await SharedPrefs.setIntValue(key: SharedPrefs.userIdKey, value: userId);
 
-      if (!mounted) return;
+    if (!mounted) return;
 
-      CustomSnackbar.successSnackBar(
-        context: context,
-        message: "Login successful",
-      );
+    CustomSnackbar.successSnackBar(
+      context: context,
+      message: "Login successful",
+    );
 
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const DashboardScreen(),
-        ),
-        (val) => false,
-      );
-    } else {
-      if (!mounted) return;
-      CustomSnackbar.failureSnackBar(
-        context: context,
-        message: "Login failed: ${response.reasonPhrase}",
-      );
-    }
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const DashboardScreen(),
+      ),
+      (val) => false,
+    );
+
     setState(() {
       isLoading = false;
     });
